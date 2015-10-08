@@ -1,0 +1,133 @@
+.navbar {
+    margin-bottom: 0;
+}
+
+.pattern1 {
+   background: url("wooden-color-background.jpg");
+ }
+ 
+ .modal-body{
+	width: 100%;
+	height: 100%;
+ }
+ 
+ /* navigation bar contents styles */
+ .navbar-default .navbar-brand,
+ .navbar-default .navbar-nav>li>a {
+	color:white;	
+	font-family: "Verdana", Geneva, sans-serif;
+ }
+ 
+ /*navbar mouse over buttons */
+.navbar-default .navbar-nav > li > a:hover,
+.navbar-default .navbar-nav > li > a:focus,
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-brand:focus{
+    color: red;
+}
+ 
+ .img-responsive{
+	max-width: 100%;
+	max-height: 400px; 	
+	/* centers image */
+	margin-left: auto;
+	margin-right: auto;
+ }
+ 
+ h3 {
+	margin-top: 0px;
+ 
+ }
+
+
+a:hover{
+	text-decoration: none;
+	color: #57B370;
+}
+
+.notStarted{
+	background-color: #F16C6C;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+}
+
+.notAvailable{
+	background-color: #FFE6E6;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+	/*border-radius: 5px;*/
+}
+
+.pending{
+	background-color: #FFCE85;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+}
+
+.pendingApproval{
+	background-color: #BC9CFF;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+	/*border-radius: 5px;*/
+}
+
+.drafted{
+	background-color: #59E2FF;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+	/*border-radius: 5px;*/
+	/*color: #98D81B;*/
+}
+
+.approved, .completed{
+	background-color: #B1E055;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+	/*border-radius: 5px;*/
+	/*color: #98D81B;*/
+}
+
+.translating{
+	background-color: #BC9CFF;
+	text-align: center;
+	padding: 5px;
+	font-weight: bold;
+	/*border-radius: 5px;*/
+}
+
+.neutralCell{
+	background-color: white;
+	font-weight: bold;
+	font-size: 120%;
+}
+
+.modalWindowIcon{
+	max-height: 65px;
+}
+			
+th { text-align: center;}
+
+table.tablesorter { 
+	background-color: #D0DAE0; 
+}
+
+table.tablesorter thead tr th{
+	background-color: #AAAAFB;
+	border: 1px solid #999999;
+	padding: 10px;
+}
+table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSortUp{
+	background-color: #F2F793;
+}
+
+.tablesorter .filter {
+    width: 100%;
+    border-radius: 5px;
+    height: 30px;
+}
