@@ -6,9 +6,24 @@ include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 $dbo = new dbo();
 $dbo->ny_connect();
 
+$filter = "";
+switch($current_level){
+	case "Art Work":
+		$filter = "WHERE StatusID NOT IN (6,8)";
+		break;
+	case "Work Instruction":
+	case "ETL Certification":
+		$filter = "WHERE StatusID NOT IN (8)";
+		break;
+	case "Packaging":
+		$filter = "WHERE StatusID NOT IN (4)";
+		break;
+}
+
 $sql = "SELECT
 		*
 		FROM `npi`.`status`
+		$filter
 		ORDER BY Seq
 		;";
 
@@ -20,7 +35,7 @@ if(count($r) > 0){
 	<?php
 	for($i = 0; $i < count($r); $i++){
 		?>
-		<option value="<?php echo $r[$i]->ID; ?>" <?php echo ($current_status == $r[$i]->ID) ? " selected " : ""; ?>><?php echo $r[$i]->Description; ?></option>
+		<option class="<?php echo $r[$i]->CSS_Class; ?>" value="<?php echo $r[$i]->StatusID; ?>" <?php echo ($current_status == $r[$i]->StatusID) ? " selected " : ""; ?>><?php echo $r[$i]->Description; ?></option>
 		<?php
 	}
 	?>

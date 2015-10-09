@@ -21,16 +21,16 @@ $status = $params['status'];
 $comment = (!empty($params['comment'])) ? "'" . addslashes($params['comment']) . "'": "NULL";
 
 $sql = "SELECT 
-		m.ID as 'MainID',
+		m.MainID,
 		m.ModelName,
 		m.RelationID,
-		l.ID as 'LevelID'
+		l.LevelID
 		#,l2.*
 		FROM `npi`.`main` m
 		JOIN `npi`.`level_relations` lr on m.RelationID = lr.LRID
-		JOIN `npi`.`levels` l on lr.ParentLevelID = l.ID
+		JOIN `npi`.`levels` l on lr.ParentLevelID = l.LevelID
 		#JOIN `npi`.`levels` l2 on lr.ChildLevelID = l2.ID
-		WHERE m.ID = $ReLvlID;";
+		WHERE m.MainID = $ReLvlID;";
 
 $r = $dbo->run_query($sql);
 
@@ -57,7 +57,7 @@ if($dbo->run_query($sql)){
 			Comments = ". $comment . ",
 			DateTimeUpdated = NOW(),
 			UserID = ". $_SESSION['SESS_MEMBER_ID'] ."
-			WHERE ID = $ReLvlID;";
+			WHERE MainID = $ReLvlID;";
 
 	if($dbo->run_query($sql)){
 		$d = array(	"status"	=> true,
