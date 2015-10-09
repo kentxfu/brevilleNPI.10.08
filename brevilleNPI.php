@@ -1,7 +1,7 @@
 <?php error_reporting(0);
 
-//include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
-//include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 
 ?>
@@ -10,7 +10,7 @@ include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 <html lang="en">
 
 <head>
-    <title >Breville NPI</title>
+    <title >Breville SKU Status</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" >
