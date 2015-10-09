@@ -1,7 +1,7 @@
 <?php error_reporting(0);
 
-include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
-include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
+//include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
+//include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 
 ?>
@@ -10,10 +10,9 @@ include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 <html lang="en">
 
 <head>
-    <title>Brevillel NPI</title>
+    <title >Breville NPI</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-	
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" >
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 	
@@ -129,7 +128,7 @@ $dbo->ny_connect();
 				<!-- BUTTONS: Expand and help -->
 				<button type="button" class="btn btn-info btn-xs pull-right" data-toggle="modal" data-target="#info" aria-label="Left Align"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Help </button>
 				
-				<a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="glyphicon glyphicon glyphicon-tasks" aria-hidden="true"></span> Expand </a>		
+				<a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="glyphicon glyphicon glyphicon-tasks" aria-hidden="true"></span> Options </a>		
 				<!-- end of buttons -->		
 				</div>
 			</div> <!-- end of row1 -->
@@ -176,7 +175,7 @@ $dbo->ny_connect();
 		<!-- page data; table -->
 		<div class="col-sm-12" >
 		
-		<h2 style="text-align:left; font-family:Helvetica, Arial;"> Breville NPI Status </h2>
+		<h2 style="text-align:left; font-family:Helvetica, Arial;"  class="tableTitle"> Breville SKU Status </h2>
 		<table id="myTable" class="tablesorter table table-striped table-bordered table-condensed hasFilters" role="grid">
 		<thead id="theadId">
 			<tr role="row" class="tablesorter-headerRow">
@@ -266,7 +265,7 @@ $dbo->ny_connect();
 		
 		<footer><hr>
 		
-		  <p style="text-align:left; font-family:Helvetica, Arial; "> © PRC Industries</p>
+		  <p style="text-align:center; font-family:Helvetica, Arial; "> © PRC Industries</p>
 		  
 		</footer>
 		

@@ -39,7 +39,7 @@
 	
 .tableTitle{
 	font-size: 40px;	
-	text-align: center;
+	text-align: center !important;
 }	
 
 /* ====   PRC ACTIONS =====*/
