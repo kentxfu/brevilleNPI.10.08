@@ -28,11 +28,11 @@
 	 h3 {	margin-top: 0px;	 }
 
 /* TABLE FORMATTING */
-	a {
+	#myTable a {
 		color: black;
 	}
 
-	a:hover{
+	#myTable a:hover{
 		text-decoration: none;
 		color: white;
 	}
@@ -87,13 +87,13 @@ th {
 	text-align: center;
 	vertical-align: middle !important;
 	font-size: 130% !important;
-	border: 1px solid black !important;
+	//border: 1px solid black !important;
 
 }
 td {	
 	min-width:50px;
 	vertical-align: middle !important;
-	border: 1px solid black !important;
+	//border: 1px solid black !important;
 }
 
 table.tablesorter { 

@@ -45,15 +45,17 @@ include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 
 	<!-- To resize based on screen size -->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	
-</head>
 
+</head>
 <?php
 $dbo = new dbo();
 $dbo->ny_connect();
 ?>
 
-<body style="background-color:#F9F8F6 ;">
+<body id="MainBody" style="background-color:#F9F8F6;">
+
+	<div class="loader"></div>
+
     <div id="wrapper" class="toggled" >
 
         <!-- Sidebar -->
@@ -77,11 +79,11 @@ $dbo->ny_connect();
 								p.LevelDescription as 'ParentLevel',
 								c.LevelDescription as 'ChildLevel'
 								FROM npi.level_relations lr
-								join npi.levels p on lr.ParentLevelID = p.ID
-								join npi.levels c on lr.ChildLevelID = c.ID
+								join npi.levels p on lr.ParentLevelID = p.LevelID
+								join npi.levels c on lr.ChildLevelID = c.LevelID
 								where ParentLevelID != 18
 								GROUP BY ParentLevel
-								ORDER BY Field(p.ID, 1,2,3,4,5,6);";
+								ORDER BY Field(p.LevelID, 1,2,3,4,5,6);";
 
 						$r = $dbo->run_query($sql);
 
@@ -93,8 +95,8 @@ $dbo->ny_connect();
 							$sql_child = "	SELECT 
 											c.DisplayName as 'Name'
 											FROM npi.level_relations lr
-											join npi.levels p on lr.ParentLevelID = p.ID
-											join npi.levels c on lr.ChildLevelID = c.ID
+											join npi.levels p on lr.ParentLevelID = p.LevelID
+											join npi.levels c on lr.ChildLevelID = c.LevelID
 											where ParentLevelID = ". $r[$i]->ParentLevelID .";";
 
 							$r_child = $dbo->run_query($sql_child);
@@ -196,6 +198,8 @@ $dbo->ny_connect();
 		<!-- Loop getting values from DB -->
 		<?php	
 
+		$modelFilter = (isset($_GET['model']) && !empty($_GET['model'])) ? "and ModelName = '" . $_GET['model'] . "'" : "";
+
 			$sql = "SELECT
 					SKU,
 					MAX(CASE WHEN Level = 'Work Instruction' THEN ReLvlID END) 'WI_LvlID',
@@ -223,18 +227,20 @@ $dbo->ny_connect();
 					(
 					SELECT 
 					m.ModelName as 'SKU',
-					m.ID as 'ReLvlID',
+					m.MainID as 'ReLvlID',
 					c.LevelDescription as 'Level',
 					s.Description as 'Status',
 					s.CSS_Class
 					FROM npi.main m
 					join npi.level_relations lr on m.RelationID = lr.LRID
-		            join npi.levels p on lr.ParentLevelID = p.ID
-					join npi.levels c on lr.ChildLevelID = c.ID
-					join npi.status s on m.StatusID = s.ID
+		            join npi.levels p on lr.ParentLevelID = p.LevelID
+					join npi.levels c on lr.ChildLevelID = c.LevelID
+					join npi.status s on m.StatusID = s.StatusID
 		            where lr.ParentLevelID = 18
+		            $modelFilter
 					) x
 					GROUP BY SKU
+					ORDER BY PPI DESC
 					;";
 
 			$r = $dbo->run_query($sql);
@@ -281,8 +287,9 @@ $dbo->ny_connect();
 	
     <!-- Menu Toggle Script -->
     <script>	
+
 		$(document).ready(function(){
-			
+
 			$("#myTable").tablesorter({
 
 				theme: 'blue',
