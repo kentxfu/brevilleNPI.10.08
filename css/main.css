@@ -38,8 +38,8 @@
 	}
 	
 .tableTitle{
-	font-size: 40px;	
-	text-align: center !important;
+	font-size: 38px;	
+	text-align: center;
 }	
 
 /* ====   PRC ACTIONS =====*/
@@ -113,4 +113,41 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     width: 100%;
     border-radius: 5px;
     height: 30px;
+}
+
+.items {
+	padding-left: 10px !important;
+}
+
+.items a:hover{
+	color: blue !important;
+}
+
+.close-round {
+	opacity: 1 !important;
+	color: #93CBF9;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    width: 40px;
+    border: 5px solid #93CBF9 !important;
+    height: 40px;
+    border-radius: 50px;
+    margin-right: -35px;
+    margin-top: -35px !important;
+    position: relative;
+    background-color: #FFFFFF !important;
+}
+
+.close-round-default {
+	opacity: 1 !important;
+	color: #000;
+    filter: alpha(opacity=20);
+    opacity: .2;
+    width: 40px;
+    height: 40px;
+    border-radius: 50px;
+    margin-right: -35px;
+    margin-top: -35px !important;
+    position: relative;
+    background-color: #FFFFFF !important;
 }

@@ -1,7 +1,7 @@
 <?php error_reporting(0);
 
-//include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
-//include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 
 ?>
@@ -10,9 +10,10 @@ include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
 <html lang="en">
 
 <head>
-    <title >Breville NPI</title>
+    <title>Breville NPI</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 
+	
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" >
 	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
 	
@@ -89,8 +90,10 @@ $dbo->ny_connect();
 
 						for($i = 0; $i < count($r); $i++){
 							echo "
-								<li data-jstree='{ \"opened\" : false }'>". $r[$i]->ParentLevel ."
-									<ul>";
+								<li data-jstree='{\"selected\":true,\"opened\":false}'>". $r[$i]->ParentLevel ."</li>";
+
+							#echo "
+							#		<ul>";
 
 							$sql_child = "	SELECT 
 											c.DisplayName as 'Name'
@@ -101,16 +104,17 @@ $dbo->ny_connect();
 
 							$r_child = $dbo->run_query($sql_child);
 
+							/*
 							for($j = 0; $j < count($r_child); $j++){
 
-								echo "
-										<li>". $r_child[$j]->Name ."</li>";
-
+								?>
+										<li><?php echo $r_child[$j]->Name; ?></li>
+								<?php
 							}
-
-								echo "
-									</ul>
-								</li>";
+							*/
+							#	echo "
+							#		</ul>
+							#	</li>";
 						}
 
 						?>
@@ -130,65 +134,28 @@ $dbo->ny_connect();
 				<!-- BUTTONS: Expand and help -->
 				<button type="button" class="btn btn-info btn-xs pull-right" data-toggle="modal" data-target="#info" aria-label="Left Align"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Help </button>
 				
-				<a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="glyphicon glyphicon glyphicon-tasks" aria-hidden="true"></span> Options </a>		
+				<a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><span class="glyphicon glyphicon glyphicon-tasks" aria-hidden="true"></span> Expand </a>		
 				<!-- end of buttons -->		
 				</div>
 			</div> <!-- end of row1 -->
-			
-		<!-- LEGEND Modal -->
-		<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" role="document">
-			<div class="modal-content">
-			
-			  <div class="modal-header">			  
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>				
-				<h4 class="modal-title" style="text-align:center" id="myModalLabel">
-				<strong> Legend </strong>				</h4> 
-			  </div>	<!-- end of header -->	  
-			  
-			  <div class="modal-body">					  
-				<img style="text-align:center;" src="img/Legend.jpg" alt="Mountain View"> </img>
-			  </div><!-- end of modal Body -->
-			  
-			</div>
-		  </div>
-		</div>
-		<!-- end of LEGEND modal -->
-
-		<div class="modal fade" id="transactions" tabindex="-1" role="dialog" aria-labelledby="modalTrans">
-		  <div class="modal-dialog" role="document" style="width: 800px;">
-			<div class="modal-content" style="width: 800px;">
-			
-			  <div class="modal-header" style="background-color: #93CBF9; border-top-left-radius: 5px; border-top-right-radius: 5px;">
-			  </div>
-			  
-			  <div class="modal-body" id="transactionsBody">
-			  </div><!-- end of modal Body -->
-			  
-			  <div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			  </div>
-			</div>
-		  </div>
-		</div>
 
 		<hr>
 		
 		<!-- page data; table -->
 		<div class="col-sm-12" >
 		
-		<h2 style="text-align:left; font-family:Helvetica, Arial;"  class="tableTitle"> Breville SKU Status </h2>
+		<h2 style="text-align:left; font-family:Helvetica, Arial;"> Breville NPI Status </h2>
 		<table id="myTable" class="tablesorter table table-striped table-bordered table-condensed hasFilters" role="grid">
 		<thead id="theadId">
 			<tr role="row" class="tablesorter-headerRow">
 				<th>SKU</th>
-				<th>Work Instruction </th>
-				<th>ETL Certification </th>
-				<th>Art Work </th>
-				<th>Packaging </th>
-				<th>FAR </th>
-				<th>TRACS</th>
-				<th>PPI  </th>
+				<th class="Work_Instruction">Work Instruction</th>
+				<th class="ETL_Certification">ETL Certification</th>
+				<th class="Art_Work">Art Work</th>
+				<th class="Packaging">Packaging</th>
+				<th class="FAR">FAR</th>
+				<th class="TRACS">TRACS</th>
+				<th class="PPI">PPI</th>
 			</tr>
 			
 		</thead>
@@ -249,13 +216,13 @@ $dbo->ny_connect();
 
 				echo "
 				<tr>
-					<td class='neutralCell'>". $r[$i]->SKU ."</td>
-					<td class='".$r[$i]->WIClass."'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='1' data-ReLvlID='". $r[$i]->WI_LvlID ."'>". $r[$i]->WI ."</a></td>
-					<td class='".$r[$i]->ETLClass."'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='2' data-ReLvlID='". $r[$i]->ETL_LvlID ."'>". $r[$i]->ETL ."</a></td>
-					<td class='".$r[$i]->AWClass."'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='3' data-ReLvlID='". $r[$i]->AW_LvlID ."'>". $r[$i]->AW ."</a></td>
-					<td class='".$r[$i]->PackagingClass."'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='4' data-ReLvlID='". $r[$i]->Packaging_LvlID ."'>". $r[$i]->Packaging ."</a></td>
-					<td class='".$r[$i]->FARClass."'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='5' data-ReLvlID='". $r[$i]->FAR_LvlID ."'>". $r[$i]->FAR ."</a></td>
-					<td class='".$r[$i]->TRACSClass."'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='6' data-ReLvlID='". $r[$i]->TRACS_LvlID ."'>". $r[$i]->TRACS ."</a></td>
+					<td class='neutralCell items' data-sku='". $r[$i]->SKU ."'><a href='javascript:void(0);'>". $r[$i]->SKU ."</a></td>
+					<td class='".$r[$i]->WIClass." Work_Instruction'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='1' data-ReLvlID='". $r[$i]->WI_LvlID ."'>". $r[$i]->WI ."</a></td>
+					<td class='".$r[$i]->ETLClass." ETL_Certification'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='2' data-ReLvlID='". $r[$i]->ETL_LvlID ."'>". $r[$i]->ETL ."</a></td>
+					<td class='".$r[$i]->AWClass." Art_Work'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='3' data-ReLvlID='". $r[$i]->AW_LvlID ."'>". $r[$i]->AW ."</a></td>
+					<td class='".$r[$i]->PackagingClass." Packaging'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='4' data-ReLvlID='". $r[$i]->Packaging_LvlID ."'>". $r[$i]->Packaging ."</a></td>
+					<td class='".$r[$i]->FARClass." FAR'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='5' data-ReLvlID='". $r[$i]->FAR_LvlID ."'>". $r[$i]->FAR ."</a></td>
+					<td class='".$r[$i]->TRACSClass." TRACS'><a href='javascript:void(0);' class='level3Detail' data-sku='". $r[$i]->SKU ."' data-levelID='6' data-ReLvlID='". $r[$i]->TRACS_LvlID ."'>". $r[$i]->TRACS ."</a></td>
 					<td class='text-center neutralCell'>". $r[$i]->PPI ."</td>
 				</tr>";	
 
@@ -271,7 +238,7 @@ $dbo->ny_connect();
 		
 		<footer><hr>
 		
-		  <p style="text-align:center; font-family:Helvetica, Arial; "> © PRC Industries</p>
+		  <p style="text-align:left; font-family:Helvetica, Arial; "> © PRC Industries</p>
 		  
 		</footer>
 		
@@ -305,14 +272,21 @@ $dbo->ny_connect();
 					  filter_cssFilter : "tablesorter-filter"
 					}
 						
-			}); 
+			});
 				
 			$("#treeData").jstree({
 				"plugins": ["checkbox"]
 			
-			}); 
+			}); 		
 				
 		}); // end of documentReady function
+
+		var list = [];
+		$("#myTable th").each(function(){
+			if($(this).text() != "SKU" && $(this).text() != "PPI"){
+				list.push($(this).text());
+			}
+		})
 
 		$("#menu-toggle").click(function(e) {
 			e.preventDefault();
@@ -325,6 +299,32 @@ $dbo->ny_connect();
 		
 		});
 
+		$('#treeData').on('changed.jstree', function (e, data) {
+		    var i, j, r = [];
+		    for(i = 0, j = data.selected.length; i < j; i++) {
+		      r.push(data.instance.get_node(data.selected[i]).text);
+		    }
+
+		 	for(var x = 0; x < list.length; x++){
+		 		for(i = 0; i < j; i++){
+		 			var class_name = list[x].split(' ').join('_');
+
+		 			if(jQuery.inArray(list[x], r) !== -1){
+		 				$("." + class_name).show();
+		 				$(".filter").closest("td").eq(parseInt(x) + 1).show();
+		 			}
+		 			else{
+		 				$("." + class_name).hide();
+		 				$(".filter").closest("td").eq(parseInt(x) + 1).hide();
+		 			}
+		 		}
+		 		//console.log(list[x]);
+		 	}
+		    
+		    //console.log(r.join(', '));
+		}).jstree();
+
+
 		$(".level3Detail").click(function(){
 			$.ajax({
 				url: "AjaxFunction.php",
@@ -332,15 +332,83 @@ $dbo->ny_connect();
 				data: {"function":"detailLvl3","SKU":$(this).attr("data-sku"),"LevelID":$(this).attr("data-levelID"),"ReLvlID":$(this).attr("data-ReLvlID")},
 				success: function(r){
 					$("#detailLvl3Body").html(r);
-					$("#detailLvl3").modal({
-						backdrop: "static",
-						keyboard: false
-					},"show");
+					$("#detailLvl3").modal("show");
 				}
 			})
 			
 		})
+
+		$(".items").click(function(){
+			var Title = $(this).attr("data-sku");
+
+			$.ajax({
+				url: "AjaxFunction.php",
+				type: "post",
+				data: {"function":"itemDetails","SKU":$(this).attr("data-sku")},
+				success: function(r){
+					$("#modalItemTitle").html(Title);
+					$("#modalItemBody").html(r);
+					$("#modalItem").modal("show");
+				}
+			})			
+		})
     </script>
+
+	<!-- LEGEND Modal -->
+	<div class="modal fade" id="info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+		<div class="modal-content">
+		
+		  <div class="modal-header">			  
+			<button type="button" class="close close-round-default" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>				
+			<h4 class="modal-title" style="text-align:center" id="myModalLabel">
+			<strong> Legend </strong>				</h4> 
+		  </div>	<!-- end of header -->	  
+		  
+		  <div class="modal-body">					  
+			<!--<img style="text-align:center;" src="img/Legend.jpg" alt="Mountain View"> </img>-->
+			<table>
+				<tr>
+					<td class="notStarted" style="width: 75px; margin-bottom: 10px;"></td>
+					<td style="padding-left: 10px;">No Action</td>
+				</tr>
+				<tr>
+					<td class="pendingApproval"></td>
+					<td style="padding-left: 10px;">Breville Action</td>
+				</tr>
+				<tr>
+					<td class="pending"></td>
+					<td style="padding-left: 10px;">PRC Action</td>
+				</tr>
+				<tr>
+					<td class="completed"></td>
+					<td style="padding-left: 10px;">Completed</td>
+				</tr>
+			</table>
+		  </div><!-- end of modal Body -->
+		  
+		</div>
+	  </div>
+	</div>
+	<!-- end of LEGEND modal -->
+
+	<div class="modal fade" id="transactions" tabindex="-1" role="dialog" aria-labelledby="modalTrans">
+	  <div class="modal-dialog" role="document" style="width: 800px;">
+		<div class="modal-content" style="width: 800px;">
+		
+		  <div class="modal-header" style="background-color: #93CBF9; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+		  </div>
+		  
+		  <div class="modal-body" id="transactionsBody">
+		  </div><!-- end of modal Body -->
+		  
+		  <div class="modal-footer">
+			<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
 
 	<!-- LVL 3 Detail -->
 	<div class="modal fade" id="detailLvl3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;">
@@ -348,7 +416,7 @@ $dbo->ny_connect();
 		<div class="modal-content" style="width: 800px;">
 
 		  <div class="modal-header" id="detailLvl3Header" style="background-color: #93CBF9; height: 50px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
-		  	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+		  	<button type="button" class="close close-round" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
 		  </div>
 		  
 		  <div class="modal-body" id="detailLvl3Body">
@@ -361,8 +429,8 @@ $dbo->ny_connect();
 	<div class="modal fade" id="trans-modal" data-modal-index="1" style="display: none;">
 	  <div class="modal-dialog" style="width: 800px;">
 	    <div class="modal-content" style="width: 800px;">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	      <div class="modal-header" id="detailLvl3Header" style="background-color: #93CBF9; height: 50px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+	        <button type="button" class="close close-round" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 	        <h4 class="modal-title" id="transModelTitle">Transaction History</h4>
 	      </div>
 	      <div class="modal-body" id="transModalBody">
@@ -376,11 +444,39 @@ $dbo->ny_connect();
 	<div class="modal fade" id="modalStatusUpdate" data-modal-index="1" style="display: none;">
 	  <div class="modal-dialog" style="width: 800px;">
 	    <div class="modal-content" style="width: 800px;">
-	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+	      <div class="modal-header" id="detailLvl3Header" style="background-color: #93CBF9; height: 50px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+	        <button type="button" class="close close-round" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 	        <h4 class="modal-title" id="modalStatusUpdateTitle">Status Update</h4>
 	      </div>
 	      <div class="modal-body" id="modalStatusUpdateBody"></div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="modalItem" data-modal-index="1" style="display: none;">
+	  <div class="modal-dialog" style="width: 800px;">
+	    <div class="modal-content" style="width: 800px;">
+		  <div class="modal-header" id="modalItemHeader" style="background-color: #93CBF9; color:#fff; font-weight: bold; height: 50px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+		  	<button type="button" class="close close-round" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+		  	<h4 class="modal-title" id="modalItemTitle">Item Details</h4>
+
+		  </div>
+
+	      <div class="modal-body" id="modalItemBody"></div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="modal fade" id="modalTransUpdate" data-modal-index="1" style="display: none;">
+	  <div class="modal-dialog" style="width: 800px;">
+	    <div class="modal-content" style="width: 800px;">
+		  <div class="modal-header" id="modalTransUpdateHeader" style="background-color: #93CBF9; font-weight: bold; height: 50px; border-top-left-radius: 5px; border-top-right-radius: 5px;">
+		  	<button type="button" class="close close-round" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span> </button>
+		  	<h4 class="modal-title" id="modalTransUpdateTitle">Transaction Update</h4>
+
+		  </div>
+
+	      <div class="modal-body" id="modalTransUpdateBody"></div>
 	    </div>
 	  </div>
 	</div>
