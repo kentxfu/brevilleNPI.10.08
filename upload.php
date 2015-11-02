@@ -2,6 +2,7 @@
 include_once "$_SERVER[DOCUMENT_ROOT]/auth.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/PRC-Data/includes/adminConnect.php";
 include_once "$_SERVER[DOCUMENT_ROOT]/classes/dbo.class.php";
+include_once "$_SERVER[DOCUMENT_ROOT]/classes/email.class.php";
 
 $dbo = new dbo();
 $dbo->ny_connect();
@@ -19,6 +20,7 @@ $FileLocation = ($isFileStatus) ? "'".$file['name']."'" : "NULL";
 $ReLvlID = $params['ReLvlID'];
 $status = $params['status'];
 $comment = (!empty($params['comment'])) ? "'" . addslashes($params['comment']) . "'": "NULL";
+$UseLastFile = $params['UseLastFile'];
 
 $sql = "SELECT 
 		m.MainID,
@@ -34,6 +36,7 @@ $sql = "SELECT
 
 $r = $dbo->run_query($sql);
 
+
 // uplaod file
 if($isFileStatus){
 	$sourcePath = $file['tmp_name']; // Storing source path of the file in a variable
@@ -42,10 +45,33 @@ if($isFileStatus){
 	if(move_uploaded_file($sourcePath,$targetPath));
 }
 
+// use the last uploaded file
+if($UseLastFile == "on"){
+	$sql = "SELECT l.*
+			FROM `npi`.`logs` l
+			JOIN `npi`.`main` m on l.SKU = m.ModelName and l.LevelID = m.RelationID and l.StatusID = m.StatusID
+			WHERE m.mainID = $ReLvlID
+			ORDER BY LogID DESC LIMIT 1;";
+	$r_last = $dbo->run_query($sql);
+
+	$isFile = 1;
+	$FileName = "'".$r_last[0]->FileName."'";
+	$FileLocation = "'".$r_last[0]->FileLocation."'";
+}
+
+// previous transaction
+$sql = "SELECT s.Description FROM `npi`.`logs` l JOIN `npi`.`Status` s on l.StatusID = s.StatusID 
+	 	WHERE MainID = $ReLvlID ORDER BY LogID desc limit 1";
+
+$r_preTrans = $dbo->run_query($sql);
+
+$prevTrans = (count($r_preTrans) == 1) ? $r_preTrans[0]->Description : "Not Started";
+
+
 $sql = "INSERT INTO `npi`.`logs`
-		(SKU, LevelID, StatusID, IsFile, FileName, FileLocation, Comments, DateTimeCreated, UserID)
+		(SKU, MainID, LevelID, StatusID, IsFile, FileName, FileLocation, Comments, DateTimeCreated, UserID)
 		VALUES
-		('". $r[0]->ModelName . "', ". $r[0]->RelationID .", ". $status . ", $isFile, $FileName, $FileLocation, ". $comment .", NOW(), ". $_SESSION['SESS_MEMBER_ID'] .");";
+		('". $r[0]->ModelName . "', ". $ReLvlID . ", ". $r[0]->RelationID .", ". $status . ", $isFile, $FileName, $FileLocation, ". $comment .", NOW(), ". $_SESSION['SESS_MEMBER_ID'] .");";
 
 #echo $sql;
 
@@ -60,6 +86,70 @@ if($dbo->run_query($sql)){
 			WHERE MainID = $ReLvlID;";
 
 	if($dbo->run_query($sql)){
+
+		// send notification
+		$notification = true;
+
+		if($notification){
+
+			$notification_comment = (!empty($params['comment'])) ? $params['comment'] : "None";
+
+			$sql = "SELECT m.MainID, m.ModelName, 
+					CASE lp.LevelDescription 
+						WHEN 'Root' THEN lc.DisplayName
+					    ELSE lp.LevelDescription 
+					END AS 'ParentLevel',
+					CASE lp.LevelDescription
+						WHEN 'ROOT' THEN ''
+					    ELSE lc.DisplayName
+					END AS 'ChildLevel',
+					s.Description as 'Status'
+					/*IFNULL((SELECT s.Description FROM `npi`.`logs` l JOIN `npi`.`Status` s on l.StatusID = s.StatusID 
+					 WHERE MainID = $ReLvlID ORDER BY LogID desc limit 1), 'Not Started') as 'PreviousStatus'
+					 */
+					FROM `npi`.`main` m JOIN `npi`.`level_relations` lr on m.RelationID = lr.LRID 
+					JOIN `npi`.`levels` lp on lr.ParentLevelID = lp.LevelID
+					JOIN `npi`.`levels` lc on lr.ChildLevelID = lc.LevelID
+					JOIN `npi`.`status` s on m.StatusID = s.StatusID
+					WHERE m.MainID = $ReLvlID;";
+
+			$r = $dbo->run_query($sql);
+
+			$email = new email();
+
+			$to = $email->getEmailList("NPI");
+
+			#$initialStatus = (!empty($r[0]->PreviousStatus)) ? $r[0]->PreviousStatus : "Not Started";
+			$initialStatus = $prevTrans;
+
+			$subject = "Item master has been modified for ". $r[0]->ModelName;
+			$content = "
+						<html>
+						<head>
+						<style>
+						body {
+							font-family: arial, san-serif;
+						}
+						</style>
+						</head>
+						<body>
+							<h3 style='color: red;'>Please do not reply. This is automatically generated. </h3>
+							<p>	SKU # ". $r[0]->ModelName ." have been modified by ". $_SESSION['SESS_FIRST_NAME'] . " " . $_SESSION['SESS_LAST_NAME'] ." on ".date("m/d/Y H:m:s").". <hr/><br/>
+								".
+								$r[0]->ParentLevel . " " . $r[0]->ChildLevel ." has been updated from \"" . $initialStatus . "\" to \"" . $r[0]->Status . "\".
+								<br/>
+								Comments: ".$notification_comment."
+								<br/>
+								<br/>
+								Please log in to view the changes. <br/>
+							</p>
+						</body>
+						</html>";
+
+			$email->send($to, $subject, $content);
+
+		}
+
 		$d = array(	"status"	=> true,
 					"msg"		=> "Update successfully");
 	}

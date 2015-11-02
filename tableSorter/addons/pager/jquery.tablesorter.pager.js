@@ -127,7 +127,7 @@
 				page: 0,
 				totalRows: 0,
 				totalPages: 0,
-				container: null,
+				container: 'null',
 				cssNext: '.next',
 				cssPrev: '.prev',
 				cssFirst: '.first',
@@ -138,9 +138,9 @@
 				positionFixed: true,
 				appender: this.appender
 			};
-			
+
 			this.construct = function(settings) {
-				
+
 				return this.each(function() {	
 					
 					config = $.extend(this.config, $.tablesorterPager.defaults, settings);

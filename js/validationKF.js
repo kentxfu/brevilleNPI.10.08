@@ -13,9 +13,9 @@
 			{
 				$(this).css("borderColor","red");	
 				if($(this).next("span").length <= 0){
-					var msg = (typeof $(this).attr("data-errorMsg") === "undefined") ? "Required" : $(this).attr("data-errorMsg");
+					var msg = (typeof $(this).attr("data-errorMsg") === "undefined") ? "" : $(this).attr("data-errorMsg");
 					
-					$(this).after("<span class='alert alert-danger'>" + msg + "</span>");
+					//$(this).after("<span class='alert alert-danger'>" + msg + "</span>");
 				}
 				valid = false;
 			}

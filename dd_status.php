@@ -27,15 +27,15 @@ $sql = "SELECT
 		ORDER BY Seq
 		;";
 
-$r = $dbo->run_query($sql);
+$r_dd_status = $dbo->run_query($sql);
 
-if(count($r) > 0){
+if(count($r_dd_status) > 0){
 	?>
 	<select name="status" id="status" class="required" style="height: 32px; border-radius:5px;">
 	<?php
-	for($i = 0; $i < count($r); $i++){
+	for($i = 0; $i < count($r_dd_status); $i++){
 		?>
-		<option class="<?php echo $r[$i]->CSS_Class; ?>" value="<?php echo $r[$i]->StatusID; ?>" <?php echo ($current_status == $r[$i]->StatusID) ? " selected " : ""; ?>><?php echo $r[$i]->Description; ?></option>
+		<option class="<?php echo $r_dd_status[$i]->CSS_Class; ?>" value="<?php echo $r_dd_status[$i]->StatusID; ?>" <?php echo ($current_status == $r_dd_status[$i]->StatusID) ? " selected " : ""; ?>><?php echo $r_dd_status[$i]->Description; ?></option>
 		<?php
 	}
 	?>
