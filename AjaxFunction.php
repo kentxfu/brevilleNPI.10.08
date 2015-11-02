@@ -819,6 +819,7 @@ switch($function)
 		print json_encode($d);
 		break;
 
+	/*
 	case "itemDetails":
 		print "<script src='js/validationKF.js'></script>";
 
@@ -841,12 +842,6 @@ switch($function)
 		<div class="col-md-2">
 			<div>
 			<?php
-			/*
-			if(file_exists("img/skus/$SKU.jpg"))
-				echo "<img src='img/skus/$SKU.jpg' style='width: 100px;'>";
-			else
-				echo "<img src='img/skus/NA.jpg' style='width: 100px;'>";
-			*/
 			if(file_exists("../breville/images/parts/".$r->ImageID."-0.jpg"))
 				echo "<img src='../breville/images/parts/".$r->ImageID."-0.jpg' style='width: 100px;'>";
 			else
@@ -952,6 +947,118 @@ switch($function)
 		})		
 		</script>
 
+		<?php
+		break;
+		*/
+
+	case "itemDetails":
+		print "<script src='js/validationKF.js'></script>";
+
+		$SKU = $_POST['SKU'];
+		$sql = "SELECT 
+				i.*,
+				c.CategoryName,
+				sc.SubCategoryName,
+				u.id_num as 'ImageID'
+				FROM `npi`.`items` i
+				JOIN `npi`.`categories` c on i.prod_cat = c.CategoryID
+				JOIN `npi`.`subcategories` sc on i.prod_sub_cat = sc.SubCategoryID
+				JOIN `breville`.`upcreference` u on i.Modelnumber = u.ModelNumber
+				WHERE i.ModelNumber = '$SKU';";
+
+		#print $sql;
+
+		$res = $dbo->run_query($sql);
+		$r = $res[0];
+
+		?>
+		
+		<div style="min-height: 600px;">
+		<div class="col-md-2">
+			<div>
+			<?php
+			/*
+			if(file_exists("img/skus/$SKU.jpg"))
+				echo "<img src='img/skus/$SKU.jpg' style='width: 100px;'>";
+			else
+				echo "<img src='img/skus/NA.jpg' style='width: 100px;'>";
+			*/
+			if(file_exists("../breville/images/parts/".$r->ImageID."-0.jpg"))
+				echo "<img src='../breville/images/parts/".$r->ImageID."-0.jpg' style='width: 100px;'>";
+			else
+				echo "<img src='img/skus/NA.jpg' style='width: 100px;'>";
+			?>
+			</div>
+		</div>
+		<div class="col-md-10">
+			<form id="itemDetailForm">
+			<input type="hidden" name="sku" value="<?php echo $SKU; ?>" >
+
+			<table class="table table-bordered table-striped" style="border-radius: 5px;">
+				<tr>
+					<td style="width: 200px;">Description</td>
+					<td><p><?php echo $r->Description; ?></p></td>
+				</tr>
+				<tr>
+					<td>Reman. Status</td>
+					<td><?php echo ($r->reman_status == 0) ? "<span style='color: red;'>No</span>" : "<span style='color: green;'>Yes</span>"; ?></td>
+				</tr>
+				<tr>
+					<td>Original UPC</td>
+					<td><?php echo $r->UPC; ?></td>
+				</tr>
+				<tr>
+					<td>Reman. UPC</td>
+					<td><?php echo $r->reman_upc; ?></td>
+				</tr>
+				<tr>
+					<td>Category</td>
+					<td><?php echo $r->CategoryName; ?></td>
+				</tr>
+				<tr>
+					<td>Sub. Category</td>
+					<td><?php echo $r->SubCategoryName; ?></td>
+				</tr>
+				<tr>
+					<td>Out Box Dimension</td>
+					<td><?php
+						$dim = explode(",", $r->pack_dim);
+						$width = $dim[0];
+						$length = $dim[1];
+						$height = $dim[2];
+						
+						if(!empty($dim[0])){
+							echo $length . " x " . $width . " x " . $height . " (Length x Width x Height)";
+						}
+						else{
+							echo "NA";
+						}
+						?>
+					</td>
+				</tr>
+				<tr>
+					<td>Reman. Package Weight</td>
+					<td><span style="font-weight:bold;"><?php echo $r->pack_weight; ?></span> Lbs.</td>
+				</tr>
+				<tr>
+					<td>SFID</td>
+					<td><?php echo $r->SFID; ?></td>
+				</tr>
+				<tr>
+					<td>Reman. SFID</td>
+					<td><?php echo (!empty($r->SFID_REMAN)) ? $r->SFID_REMAN : "NA"; ?></td>
+				</tr>
+				<tr>
+					<td>Reman. Base SFID</td>
+					<td><?php echo (!empty($r->SFID_RMB)) ? $r->SFID_RMB : "NA"; ?></td>
+				</tr>
+			</table>
+
+			<h4 class="alert alert-info">Please use the original item master to update item information.</h4>
+			
+			</form>
+		</div>
+		</div>
 		<?php
 		break;
 
